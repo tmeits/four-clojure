@@ -29,12 +29,17 @@
   ;; Clojure strings are Java strings.
   ;; This means that you can use any of the Java string methods on Clojure strings.
   (is (= "HELLO WORLD" (.toUpperCase "hello world")))
-  (is (= "ПРИВЕТ МИР" (.toUpperCase "Привет Мир")))) ; UTF-8
+  (is (= "ПРИВЕТ МИР" (.toUpperCase "Привет Мир")))) ; translate russian UTF-8
 
 (deftest s4 "Intro to Lists"
   ;; Lists can be constructed with either a function or a quoted form.
   (is (= (list :a :b :c) '(:a :b :c)))
   (is (= (list 'a 'b 'c) '(a b c))))
+
+(deftest s5 "Lists: conj"
+  ;; When operating on a list, the conj function will return a new list with one or more items "added" to the front.
+  (is (= '(1 2 3 4) (conj '(2 3 4) 1)))
+  (is (= '(1 2 3 4) (conj '(3 4) 2 1))))         ; [coll x & xs]
 
 (run-tests)
 
