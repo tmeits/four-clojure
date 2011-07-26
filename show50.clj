@@ -69,6 +69,37 @@
   ;; When operating on a map, the conj function returns a new map with one or more key-value pairs "added".
   (is (= {:a 1, :b 2, :c 3} (conj {:a 1} {:b 2} [:c 3])))
   (is (= {:a 1, :b 2, :c 3} (conj {:a 1} [:b 2] [:c 3]))))
+
+(deftest s12 "Intro to Sequences"
+  ;; All Clojure collections support sequencing. You can operate on sequences with functions like first, second, and last.
+  (is (= 3 (first '(3 2 1))))	
+  (is (= 3 (second [2 3 4])))	
+  (is (= 3 (last (list 1 2 3)))))
+
+(deftest s13 "Sequences: rest"
+  ;; The rest function will return all the items of a sequence except the first.
+  (is (= [20 30 40] (rest [10 20 30 40]))))
+
+(deftest s14 "Intro to Functions"
+  ;; Clojure has many different ways to create functions.
+  (is (= 8 ((fn add-five [x] (+ x 5)) 3)))
+  (is (= 8 ((fn [x] (+ x 5)) 3)))	
+  (is (= 8 (#(+ % 5) 3)))	
+  (is (= 8 ((partial + 5) 3))))
+
+(deftest s15 "Double Down"
+  ;; Write a function which doubles a number.
+  (is (= (#(+ 2 %) 2) 4))
+  (is (= ((fn [x] (+ x 3)) 3) 6))
+  (is (= ((fn add-11 [x] (+ x 11)) 11) 22))
+  (is (= ((partial + 7) 7) 14)))
+
+(deftest s16 "Hello World"
+  ;; Write a function which returns a personalized greeting.
+  (is (= (#(str "Hello, " % "!") "Dave") "Hello, Dave!"))  ; There is no help how to put functions.
+  (is (= ((fn [x] (str "Hello, " x "!")) "Jenn") "Hello, Jenn!"))
+  (is (= ((fn concat-str [x] (str "Hello, " x "!")) "Rhea") "Hello, Rhea!"))
+  (is (= ((partial str "Hello, " "CloJure") "!!!") "Hello, CloJure!!!")))
 (run-tests)
 
 ;; 21: Write a function which returns the Nth element from a sequence.
