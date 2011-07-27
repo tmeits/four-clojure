@@ -108,6 +108,13 @@
 (deftest s18 "Sequences: filter"
   ;; The filter function takes two arguments: a predicate function (f) and a sequence (s). Filter returns a new sequence consisting of all the items of s for which (f item) returns true.
  (is (= '(6 7) (filter #(> % 5) '(3 4 5 6 7)))))
+
+(deftest s19 "Last Element"
+  ;; Write a function which returns the last element in a sequence.
+  (is (= (#(peek %) [1 2 3 4 5]) 5))	
+  (is (= (#(peek (vec %)) '(5 4 3)) 3))
+  (is (= (#(peek %) ["b" "c" "d"]) "d"))
+  )
 (run-tests)
 
 ;; 21: Write a function which returns the Nth element from a sequence.
