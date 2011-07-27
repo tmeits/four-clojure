@@ -8,10 +8,19 @@ Four-Clojure is a resource to help fledgling clojurians learn the language throu
 
 ## Usage Emacs REPL
 
+cd
+cd four-clojure
 emacs
 C-x C-f show50.clj
 M-x clojure-jack-in
 C-x b *slime-repl clojure* 
+
+## Usage lein
+
+cd 
+git clone git@github.com:tmeits/99-clojure-exercises.git
+cd four-clojure
+lein repl
 
 ## License
 

@@ -36,15 +36,25 @@
 
 ;; clojure-mode
 ;; git clone git://github.com/technomancy/clojure-mode.git
+;; cd ~/clojure-mode/git pull 
 (add-to-list 'load-path "~/clojure-mode")
 (require 'clojure-mode)
 
 ;; paredit
 ;; wget http://mumble.net/~campbell/emacs/paredit.el
+;; 
 (add-to-list 'load-path "~/paredit")
 (require 'paredit)
 (defun turn-on-paredit () (paredit-mode 1))
 (add-hook 'clojure-mode-hook 'turn-on-paredit)
+(add-hook 'slime-repl-mode-hook (lambda () (paredit-mode +1)))
+;; Stop SLIME's REPL from grabbing DEL,
+;; which is annoying when backspacing over a '('
+(defun override-slime-repl-bindings-with-paredit ()
+  (define-key slime-repl-mode-map
+    (read-kbd-macro paredit-backward-delete-key) nil))
+(add-hook 'slime-repl-mode-hook
+	  'override-slime-repl-bindings-with-paredit)
 
 ;; SLIME 
 ;; ~$ sudo add-apt-repository "deb http://archive.canonical.com/ lucid partner"
