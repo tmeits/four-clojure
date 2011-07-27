@@ -2,12 +2,19 @@
 
 Four-Clojure is a resource to help fledgling clojurians learn the language through interactive problems.
 
-## Usage
+## Usage console
 
-FIXME: write
+./run.sh
+
+## Usage Emacs REPL
+
+emacs
+C-x C-f show50.clj
+M-x clojure-jack-in
+C-x b *slime-repl clojure* 
 
 ## License
 
-Copyright (C) 2011 FIXME
+Copyright (C) 2011 tmeits
 
 Distributed under the Eclipse Public License, the same as Clojure.

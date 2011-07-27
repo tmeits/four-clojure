@@ -100,6 +100,10 @@
   (is (= ((fn [x] (str "Hello, " x "!")) "Jenn") "Hello, Jenn!"))
   (is (= ((fn concat-str [x] (str "Hello, " x "!")) "Rhea") "Hello, Rhea!"))
   (is (= ((partial str "Hello, " "CloJure") "!!!") "Hello, CloJure!!!")))
+
+(deftest s17 "Sequences: map"
+  ;; The map function takes two arguments: a function (f) and a sequence (s). Map returns a new sequence consisting of the result of applying f to each item of s. Do not confuse the map function with the map data structure.
+  (is (= __ (map #(+ % 5) '(1 2 3)))))
 (run-tests)
 
 ;; 21: Write a function which returns the Nth element from a sequence.
