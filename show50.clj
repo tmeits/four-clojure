@@ -113,8 +113,15 @@
   ;; Write a function which returns the last element in a sequence.
   (is (= (#(peek %) [1 2 3 4 5]) 5))	
   (is (= (#(peek (vec %)) '(5 4 3)) 3))
-  (is (= (#(peek %) ["b" "c" "d"]) "d"))
+  (is (= (#(peek %) ["b" "c" "d"]) "d")))
+
+(deftest s20 "Penultimate Element"
+  ;; Write a function which returns the second to last element from a sequence.
+  (is (= (#(second (reverse %)) (list 1 2 3 4 5)) 4))	
+  (is (= (#(second (reverse %)) ["a" "b" "c"]) "b"))	
+  (is (= (first [[1 2] [3 4]]) [1 2]))
   )
+;; Tips Keeping parentheses balanced. (short of C-Q ( to force-insert a literal one, or other craziness). Inserting an open paren also inserts a closing one.
 (run-tests)
 
 ;; 21: Write a function which returns the Nth element from a sequence.
