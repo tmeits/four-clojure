@@ -18,7 +18,7 @@ C-x b *slime-repl clojure*
 ## Usage lein
 
 cd 
-git clone git@github.com:tmeits/99-clojure-exercises.git
+git clone git://github.com/tmeits/four-clojure.git
 cd four-clojure
 lein repl
 
