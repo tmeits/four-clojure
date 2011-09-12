@@ -121,21 +121,20 @@
   (is (= (#(second (reverse %)) ["a" "b" "c"]) "b"))	
   (is (= (first [[1 2] [3 4]]) [1 2])))
 
-;; Tips Keeping parentheses balanced. (short of C-Q ( to force-insert a literal one, or other craziness). Inserting an open paren also inserts a closing one. C-u DEL http://www.slideshare.net/mudphone/paredit-preso
+;; Tips Keeping parentheses balanced. (short of C-Q ( to force-insert a literal one, or other craziness). Inserting an open paren also inserts a closing one. C-u DEL http://www.slideshare.net/mudphone/paredit-preso http://p.hagelb.org/paredit-screencast.html
+
+
+
+(deftest s21 "Write a function which returns the Nth element from a sequence. forbidden: nth"
+  (is (= (nth '(4 5 6 7) 2) 6))         ; используем встроенную функцию nht, индексация с нуля.
+  (is (= (first (drop 2 '(4 5 6 7))) 6)); удалим два элемента из последовательности, в оставшемся списке нужный на первом месте
+  (is (= (#(first (nthnext %1 %2)) '(4 5 6 7) 2) 6))
+  (is (=  ((fn [coll n] 
+             ((apply comp (cons first (repeat n rest))) coll)) '(4 5 6 7) 2)) 6)
+  (is (= ((fn [coll n] ; рекурсивное решение
+            ) '(4 5 6 7) 2) 6)))
 
 (run-tests)
-
-;; 21: Write a function which returns the Nth element from a sequence.
-; (= (__ '(4 5 6 7) 2) 6)
-; forbidden: nth
-(fn [coll n] 
-  ((apply comp (cons first (repeat n rest))) coll))
-; We first compose n rest functions to get progressively shorter lists till the
-; desired element is the head, then take the head. A less fancy version just
-; uses nthnext, but it feels like cheating:
-(fn [coll n]
-  (first (nthnext coll n)))
-
 ; 22: Write a function which returns the total number of elements in a sequence.
 ; (= (__ '(1 2 3 3 1)) 5)
 ; forbidden: count
