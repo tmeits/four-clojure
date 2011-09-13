@@ -150,7 +150,16 @@
           [1 2 3 4 5])
          (reverse [1 2 3 4 5]))))
 
-(deftest s24 "Write a function which returns true if the given sequence is a palindrome."
+(deftest s24 "Write a function which returns the sum of a sequence of numbers."
+  (defn sum24 [coll]
+   (reduce + (seq coll)))
+  (is (= (sum24 [1 2 3]) 6))
+  (is (= (sum24 (list 0 -2 5 5)) 8))
+  (is (= (sum24 #{4 2 1}) 7))
+  (is (= (sum24 '(0 0 -1)) -1))
+  (is (= (sum24 '(1 10 3)) 14)))
+
+(deftest s27 "Write a function which returns true if the given sequence is a palindrome."
   (is (false? (#(= (reverse %) (seq %)) '(1 2 3 4 5))))
   (is (true?  (#(= (reverse %) (seq %)) "racecar")))
   (is (true?  (#(= (reverse %) (seq %)) [:foo :bar :foo])))
@@ -168,14 +177,6 @@
       1 1))) 
 ; we first recursively construct a lazy sequence of infinite number of
 ; fibonacci numbers
-
-; 27: Write a function which returns true if the given sequence is a palindrome.
-; (true? (__ '(1 1 3 3 1 1)))
-(fn [coll]
-  (let [rc (reverse coll) n (count coll)]
-    (every? identity 
-      (map #(= (nth coll %) (nth rc %)) (range (/ (dec n) 2))))))
-; we naively compare half of the pairs of elment e(i) and e(n-i-1)
 
 ; 28: Write a function which flattens a sequence.
 ; (= (__ '((1 2) 3 [4 [5 6]])) '(1 2 3 4 5 6))
