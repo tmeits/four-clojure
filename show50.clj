@@ -152,12 +152,20 @@
 
 (deftest s24 "Write a function which returns the sum of a sequence of numbers."
   (defn sum24 [coll]
-   (reduce + (seq coll)))
+   (reduce + (seq coll)))               ; #(reduce + (seq coll)) for http://4clojure.com/problem/24
   (is (= (sum24 [1 2 3]) 6))
   (is (= (sum24 (list 0 -2 5 5)) 8))
   (is (= (sum24 #{4 2 1}) 7))
   (is (= (sum24 '(0 0 -1)) -1))
   (is (= (sum24 '(1 10 3)) 14)))
+
+; Нечётное число — целое число, которое не делится без остатка на 2:   …, −3, −1, 1, 3, 5, 7, 9, …
+(deftest s25 "Write a function which returns only the odd numbers from a sequence."
+  ; #(filter odd? %) http://4clojure.com/problem/25 
+  (is (= (#(filter odd? %) #{1 2 3 4 5}) '(1 3 5)))
+  (is (= (#(filter odd? %) [4 2 1 6]) '(1)))
+  (is (= (#(filter odd? %) [2 2 4 6]) '()))
+  (is (= (#(filter odd? %) [1 1 1 3]) '(1 1 1 3))))
 
 (deftest s27 "Write a function which returns true if the given sequence is a palindrome."
   (is (false? (#(= (reverse %) (seq %)) '(1 2 3 4 5))))
