@@ -135,19 +135,27 @@
           '(4 5 6 7) 2) 6)))
 
 ;; Функция возвращающая количество элементов в последовательности.
-;; Нельзя использовать стандарную count
-;; 
+;; Нельзя использовать стандарную count 
 (deftest s22 "Write a function which returns the total number of elements in a sequence. forbidden: count"
   (is (= ((fn [x] (reduce + (map (constantly 1) x))) '(1 2 3 3 1)) (count '(1 2 3 3 1)))))
 
+;; Обращение списка (последовательности)
+(deftest s23 "Write a function which reverses a sequence.  forbidden: reverse"
+  (is (= (#(into nil %) [1 2 3 4 5]) [5 4 3 2 1]))
+  ;; рекурсивное решение
+  (is (= ((fn [c] (loop [cc c n nil]
+                    (if (empty? cc)
+                      n
+                      (recur (rest cc) (conj n (first cc))))))
+          [1 2 3 4 5])
+         (reverse [1 2 3 4 5]))))
+
+
 (run-tests)
-; 23: Write a function which reverses a sequence.
-; (= (__ [1 2 3 4 5]) [5 4 3 2 1])
-; forbidden: reverse
-#(into () %)
 ; We exploit the property of the list, which alway add new element
 ; in front of the head. Also that the clojure sequences' equality
 ; evaluation is element based, so [1 2 3] equals to '(1 2 3)
+
 
 ; 26: Write a function which returns the first X fibonacci numbers.
 ; (= (__ 6) '(1 1 2 3 5 8))
