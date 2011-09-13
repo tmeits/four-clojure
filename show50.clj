@@ -150,12 +150,14 @@
           [1 2 3 4 5])
          (reverse [1 2 3 4 5]))))
 
+(deftest s24 "Write a function which returns true if the given sequence is a palindrome."
+  (is (false? (#(= (reverse %) (seq %)) '(1 2 3 4 5))))
+  (is (true?  (#(= (reverse %) (seq %)) "racecar")))
+  (is (true?  (#(= (reverse %) (seq %)) [:foo :bar :foo])))
+  (is (true?  (#(= (reverse %) (seq %)) '(1 1 3 3 1 1))))
+  (is (false? (#(= (reverse %) (seq %)) '(:a :b :c)))))
 
 (run-tests)
-; We exploit the property of the list, which alway add new element
-; in front of the head. Also that the clojure sequences' equality
-; evaluation is element based, so [1 2 3] equals to '(1 2 3)
-
 
 ; 26: Write a function which returns the first X fibonacci numbers.
 ; (= (__ 6) '(1 1 2 3 5 8))
