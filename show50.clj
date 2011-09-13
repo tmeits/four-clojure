@@ -134,14 +134,13 @@
               (if (= i 0) (first cc) (recur (- i 1) (rest cc)))))
           '(4 5 6 7) 2) 6)))
 
-(run-tests)
-; 22: Write a function which returns the total number of elements in a sequence.
-; (= (__ '(1 2 3 3 1)) 5)
-; forbidden: count
-#(reduce + (map (fn [x] 1) %))
-; We just turn each element into 1 and then add them up
-; Note that (fn [x] 1) can be replaced by (constantly 1)
+;; Функция возвращающая количество элементов в последовательности.
+;; Нельзя использовать стандарную count
+;; 
+(deftest s22 "Write a function which returns the total number of elements in a sequence. forbidden: count"
+  (is (= ((fn [x] (reduce + (map (constantly 1) x))) '(1 2 3 3 1)) (count '(1 2 3 3 1)))))
 
+(run-tests)
 ; 23: Write a function which reverses a sequence.
 ; (= (__ [1 2 3 4 5]) [5 4 3 2 1])
 ; forbidden: reverse
