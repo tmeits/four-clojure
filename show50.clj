@@ -137,7 +137,8 @@
 ;; Функция возвращающая количество элементов в последовательности.
 ;; Нельзя использовать стандарную count 
 (deftest s22 "Write a function which returns the total number of elements in a sequence. forbidden: count"
-  (is (= ((fn [x] (reduce + (map (constantly 1) x))) '(1 2 3 3 1)) (count '(1 2 3 3 1)))))
+  (is (= ((fn [x] (reduce + (map (constantly 1) x))) '(1 2 3 3 1)) (count '(1 2 3 3 1))))
+  (is (= (#(reduce (fn [x y] (inc x)) 0 %) '(1 2 3 3 1))) 5))
 
 ;; Обращение списка (последовательности)
 (deftest s23 "Write a function which reverses a sequence.  forbidden: reverse"
@@ -167,24 +168,30 @@
   (is (= (#(filter odd? %) [2 2 4 6]) '()))
   (is (= (#(filter odd? %) [1 1 1 3]) '(1 1 1 3))))
 
+;; Время, которое уходит на оттачивание мастерства, лучше, чем время потраченное на выражение себя на Flickr, Facebook, Twitter.
+(reduce 
+  (fn [[a b] _] [b (+ a b)])  ; function to calculate the next pair of values
+  [0 1]                       ; initial pair of fibonnaci numbers
+  (range 10))                 ; a seq to specify how many iterations you want
+
+;; 26: Write a function which returns the first X fibonacci numbers.
+;; (= (__ 6) '(1 1 2 3 5 8))
+(fn [x]
+  (take x
+    ((fn fib [a b]
+        (cons a (lazy-seq (fib b (+ a b))))) 
+      1 1))) 
+;; we first recursively construct a lazy sequence of infinite number of
+;; fibonacci numbers
+
+(run-tests)
+
 (deftest s27 "Write a function which returns true if the given sequence is a palindrome."
   (is (false? (#(= (reverse %) (seq %)) '(1 2 3 4 5))))
   (is (true?  (#(= (reverse %) (seq %)) "racecar")))
   (is (true?  (#(= (reverse %) (seq %)) [:foo :bar :foo])))
   (is (true?  (#(= (reverse %) (seq %)) '(1 1 3 3 1 1))))
   (is (false? (#(= (reverse %) (seq %)) '(:a :b :c)))))
-
-(run-tests)
-
-; 26: Write a function which returns the first X fibonacci numbers.
-; (= (__ 6) '(1 1 2 3 5 8))
-(fn [x]
-  (take x
-    ((fn fib [a b]
-        (cons a (lazy-seq (fib b (+ a b))))) 
-      1 1))) 
-; we first recursively construct a lazy sequence of infinite number of
-; fibonacci numbers
 
 ; 28: Write a function which flattens a sequence.
 ; (= (__ '((1 2) 3 [4 [5 6]])) '(1 2 3 4 5 6))
