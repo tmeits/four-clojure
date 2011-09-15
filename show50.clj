@@ -179,6 +179,8 @@
              (range 0 n)))) ; a seq to specify how many iterations you want)
     (is (= (map fib  (range 0 6)) '(1 1 2 3 5 8))))
 
+
+;; (global-set-key (kbd "C-x C-b") 'ibuffer)
 ;; C-c M-p to change the namespace of the repl session.
 ;; M-. to jump to a definition
 ;; http://en.wikibooks.org/wiki/Clojure_Programming/Examples/Lazy_Fibonacci

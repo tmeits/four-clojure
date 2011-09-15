@@ -4,5 +4,5 @@
   :license {:name "Eclipse Public License"}
   :dependencies [[org.clojure/clojure "1.2.1"]
                  [org.clojure/clojure-contrib "1.2.0"]]
-  :dev-dependencies [[swank-clojure "1.3.2"]]
+  :dev-dependencies [[swank-clojure "1.3.2" :exclusions [org.clojure/clojure]]]
   :main four_clojure.core)
