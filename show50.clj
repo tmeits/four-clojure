@@ -168,21 +168,20 @@
   (is (= (#(filter odd? %) [2 2 4 6]) '()))
   (is (= (#(filter odd? %) [1 1 1 3]) '(1 1 1 3))))
 
-;; Время, которое уходит на оттачивание мастерства, лучше, чем время потраченное на выражение себя на Flickr, Facebook, Twitter.
-(reduce 
-  (fn [[a b] _] [b (+ a b)])  ; function to calculate the next pair of values
-  [0 1]                       ; initial pair of fibonnaci numbers
-  (range 10))                 ; a seq to specify how many iterations you want
+;; Время, которое уходит на оттачивание мастерства, лучше, чем время
+;; потраченное на выражение себя на Flickr, Facebook, Twitter.
+(deftest s26
+  "Write a function which returns the first X fibonacci numbers."
+  (defn fib [n]
+    (second (reduce 
+             (fn [[a b] _] [b (+ a b)]) ; function to calculate the next pair of values
+             [0 1]         ; initial pair of fibonnaci numbers
+             (range 0 n)))) ; a seq to specify how many iterations you want)
+    (is (= (map fib  (range 0 6)) '(1 1 2 3 5 8))))
 
-;; 26: Write a function which returns the first X fibonacci numbers.
-;; (= (__ 6) '(1 1 2 3 5 8))
-(fn [x]
-  (take x
-    ((fn fib [a b]
-        (cons a (lazy-seq (fib b (+ a b))))) 
-      1 1))) 
-;; we first recursively construct a lazy sequence of infinite number of
-;; fibonacci numbers
+;; C-c M-p to change the namespace of the repl session.
+;; M-. to jump to a definition
+;; http://en.wikibooks.org/wiki/Clojure_Programming/Examples/Lazy_Fibonacci
 
 (run-tests)
 
