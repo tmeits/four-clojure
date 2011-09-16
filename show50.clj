@@ -185,8 +185,6 @@
 ;; M-. to jump to a definition
 ;; http://en.wikibooks.org/wiki/Clojure_Programming/Examples/Lazy_Fibonacci
 
-(run-tests)
-
 (deftest s27 "Write a function which returns true if the given sequence is a palindrome."
   (is (false? (#(= (reverse %) (seq %)) '(1 2 3 4 5))))
   (is (true?  (#(= (reverse %) (seq %)) "racecar")))
@@ -194,9 +192,15 @@
   (is (true?  (#(= (reverse %) (seq %)) '(1 1 3 3 1 1))))
   (is (false? (#(= (reverse %) (seq %)) '(:a :b :c)))))
 
-; 28: Write a function which flattens a sequence.
-; (= (__ '((1 2) 3 [4 [5 6]])) '(1 2 3 4 5 6))
-; forbidden: flatten
+;; Чтобы перечислить листья дерева, мы можем использовать процедуру flatten.
+(deftest s28 "Write a function which flattens a sequence. forbidden: flatten"
+  (is (= (flatten '((1 2) 3 [4 [5 6]])) '(1 2 3 4 5 6)))
+  (is (= (flatten [[1], 2, [[3,4], 5], [[[]]], [[[6]]], 7, 8, []]) [1, 2, 3, 4, 5, 6, 7, 8])))
+
+;; Tips
+;; http://groups.google.com/group/clojure/browse_thread/thread/7633d311ac63214f
+;; http://www.infoq.com/articles/in-depth-look-clojure-collections
+
 (fn flt [coll]
   (let [l (first coll) r (next coll)]
     (concat 
@@ -205,9 +209,10 @@
         [l])
       (when (sequential? r)
         (flt r)))))
-; we basically treat the nested collection as a tree and recursively walk the
-; tree. Clojure's flatten use a tree-seq to walk the tree.
 
+;; http://habrahabr.ru/blogs/soft/105300/#habracut Про Org-Mode
+;; http://www.softcraft.ru/paradigm/dp/dp05-06.shtml
+(run-tests)
 ; 29: Write a function which takes a string and returns a new string containing
 ;     only the capital letters.
 ; (= (__ "HeLlO, WoRlD!") "HLOWRD")    
