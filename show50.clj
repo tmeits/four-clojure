@@ -175,7 +175,7 @@
   (defn fib [n]
     (second (reduce 
              (fn [[a b] _] [b (+ a b)]) ; function to calculate the next pair of values
-             [0 1]         ; initial pair of fibonnaci numbers
+             [0 1]          ; initial pair of fibonnaci numbers
              (range 0 n)))) ; a seq to specify how many iterations you want)
     (is (= (map fib  (range 0 6)) '(1 1 2 3 5 8))))
 
@@ -205,6 +205,17 @@
         [l])
       (when (sequential? r)
         (flt r)))))
+
+(defn flatten-recur ""
+  [coll]
+  (let [l (first coll) r (next coll)]
+    (concat 
+     (if (sequential? l)
+       (flt l)
+       [l])
+     (when (sequential? r)
+       (flt r)))))
+
 ; we basically treat the nested collection as a tree and recursively walk the
 ; tree. Clojure's flatten use a tree-seq to walk the tree.
 
