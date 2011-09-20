@@ -175,7 +175,7 @@
   (defn fib [n]
     (second (reduce 
              (fn [[a b] _] [b (+ a b)]) ; function to calculate the next pair of values
-             [0 1]         ; initial pair of fibonnaci numbers
+             [0 1]          ; initial pair of fibonnaci numbers
              (range 0 n)))) ; a seq to specify how many iterations you want)
     (is (= (map fib  (range 0 6)) '(1 1 2 3 5 8))))
 
@@ -184,6 +184,8 @@
 ;; C-c M-p to change the namespace of the repl session.
 ;; M-. to jump to a definition
 ;; http://en.wikibooks.org/wiki/Clojure_Programming/Examples/Lazy_Fibonacci
+
+(run-tests)
 
 (deftest s27 "Write a function which returns true if the given sequence is a palindrome."
   (is (false? (#(= (reverse %) (seq %)) '(1 2 3 4 5))))
