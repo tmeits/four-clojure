@@ -53,5 +53,26 @@
 
 ;; (time (main 16))
 
+;; The code is available on Git: https://github.com/tmeits/four-clojure
+;; http://inclojurewetrust.blogspot.com/2009/11/tail-recursion-and-function-composition.html
+;; https://gist.github.com/1221519
+(def *count* (atom 0))
+
+(defstruct node :children)
+
+(defn make-node [children] "ha ha ha"
+  (swap! *count* inc)
+  (struct node children))
+
+(defn make-tree [depth]
+  (if (> depth 1)
+    (make-node [(make-tree (dec depth)) (make-tree (dec depth))])
+    (make-node [])))
+
+(let [depth (if *command-line-args*
+              (Integer/parseInt (first *command-line-args*))
+              10)]
+  (make-tree depth)
+  (println @*count*))
 
 

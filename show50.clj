@@ -192,26 +192,63 @@
   (is (true?  (#(= (reverse %) (seq %)) '(1 1 3 3 1 1))))
   (is (false? (#(= (reverse %) (seq %)) '(:a :b :c)))))
 
+
+;; Tips
+;; http://groups.google.com/group/clojure/browse_thread/thread/7633d311ac63214f
+;; http://www.infoq.com/articles/in-depth-look-clojure-collections
+;; Keys
+;; 
+
+;; http://cera.us/ta/cs380_00f/lisp.examples.lsp
+(defun flatten (x)
+  "flattens all embedded lists"
+  (cond ((null x) nil)
+        ((atom x) (list x))
+        (t (append (flatten (car x))
+                   (flatten (cdr x))))))
 ;; Чтобы перечислить листья дерева, мы можем использовать процедуру flatten.
 (deftest s28 "Write a function which flattens a sequence. forbidden: flatten"
   (is (= (flatten '((1 2) 3 [4 [5 6]])) '(1 2 3 4 5 6)))
   (is (= (flatten [[1], 2, [[3,4], 5], [[[]]], [[[6]]], 7, 8, []]) [1, 2, 3, 4, 5, 6, 7, 8])))
 
-;; Tips
-;; http://groups.google.com/group/clojure/browse_thread/thread/7633d311ac63214f
-;; http://www.infoq.com/articles/in-depth-look-clojure-collections
+(defn flatten-rec  "flattens all embedded sequential"
+  [coll]
+  (filter
+   #(not (nil? %))
+   (cond
+    (not (coll? coll)) (list coll)
+    :else (concat
+           (flatten-rec (first coll))
+           (flatten-rec (next coll))))))
 
-(fn flt [coll]
-  (let [l (first coll) r (next coll)]
-    (concat 
-      (if (sequential? l)
-        (flt l)
-        [l])
-      (when (sequential? r)
-        (flt r)))))
+;; https://gist.github.com/1120880
+(defn flat-lazy-seq [[x & more :as coll]]
+  (cond
+    (empty? coll) []
+    (coll? x) (lazy-seq (concat (flat-lazy-seq x) (flat-lazy-seq more)))
+    :else (lazy-seq (concat (vector x) (flat-lazy-seq more)))))
+
+;; Using lazy-cat
+(fdefn flat-lazy-cat [[x & more :as coll]]
+  (cond
+    (empty? coll) []
+    (coll? x) (lazy-cat (flat x) (flat more))
+    :else (lazy-cat (vector x) (flat more))))
+
+(defn skl2 [tree]
+  (loop [[self & todo :as src] [tree] dst [()]]
+    (cond
+     (empty? src) dst
+     (not (coll? self)) (recur todo (first dst))
+     (empty? self) (recur todo (conj (first dst) (rest dst)))
+     :else (recur (list* (first self) (rest self) todo) [dst]))))
 
 ;; http://habrahabr.ru/blogs/soft/105300/#habracut Про Org-Mode
 ;; http://www.softcraft.ru/paradigm/dp/dp05-06.shtml
+;; http://e-maxx.ru/index.php
+;; http://wikisec.ru/index.php?title=%D0%A2%D1%80%D0%B5%D0%B1%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BA_5_%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D1%83_%D0%B7%D0%B0%D1%89%D0%B8%D1%89%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8_%D0%A1%D0%92%D0%A2
+;; http://emeliyannikov.blogspot.com/2011/08/blog-post_22.html
+
 (run-tests)
 ; 29: Write a function which takes a string and returns a new string containing
 ;     only the capital letters.
