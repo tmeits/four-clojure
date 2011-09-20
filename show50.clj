@@ -175,7 +175,7 @@
   (defn fib [n]
     (second (reduce 
              (fn [[a b] _] [b (+ a b)]) ; function to calculate the next pair of values
-             [0 1]          ; initial pair of fibonnaci numbers
+             [0 1]         ; initial pair of fibonnaci numbers
              (range 0 n)))) ; a seq to specify how many iterations you want)
     (is (= (map fib  (range 0 6)) '(1 1 2 3 5 8))))
 
@@ -184,8 +184,6 @@
 ;; C-c M-p to change the namespace of the repl session.
 ;; M-. to jump to a definition
 ;; http://en.wikibooks.org/wiki/Clojure_Programming/Examples/Lazy_Fibonacci
-
-(run-tests)
 
 (deftest s27 "Write a function which returns true if the given sequence is a palindrome."
   (is (false? (#(= (reverse %) (seq %)) '(1 2 3 4 5))))
@@ -201,17 +199,26 @@
 ;; Keys
 ;; 
 
-;; http://cera.us/ta/cs380_00f/lisp.examples.lsp
-(defun flatten (x)
-  "flattens all embedded lists"
-  (cond ((null x) nil)
-        ((atom x) (list x))
-        (t (append (flatten (car x))
-                   (flatten (cdr x))))))
 ;; Чтобы перечислить листья дерева, мы можем использовать процедуру flatten.
 (deftest s28 "Write a function which flattens a sequence. forbidden: flatten"
   (is (= (flatten '((1 2) 3 [4 [5 6]])) '(1 2 3 4 5 6)))
-  (is (= (flatten [[1], 2, [[3,4], 5], [[[]]], [[[6]]], 7, 8, []]) [1, 2, 3, 4, 5, 6, 7, 8])))
+  (is (= (flatten [[1], 2, [[3,4], 5], [[[]]], [[[6]]], 7, 8, []]) [1, 2, 3, 4, 5, 6, 7, 8]))
+  (is (= (flatten-loop [[1], 2, [[3,4], 5], [[[]]], [[[6]]], 7, 8, []]) [1, 2, 3, 4, 5, 6, 7, 8])))
+
+(defn flatten-loop-recur "loop and recur for flattens all embedded sequential"
+  [coll]
+  (loop [acc [] [head & tail :as coll] coll]
+    (cond
+     (empty? coll) acc
+     (coll? head) (recur (into acc (flatten-loop-recur head)) tail)
+     :else (recur (conj acc head) tail))))
+
+;; http://habrahabr.ru/blogs/python/111768/
+;; http://library.readscheme.org/page1.html
+
+(defn flatten-tree [x]
+  (let [s? #(instance? clojure.lang.Sequential %)]
+    (filter (complement s?) (tree-seq s? seq x))))
 
 (defn flatten-rec  "flattens all embedded sequential"
   [coll]
@@ -222,6 +229,15 @@
     :else (concat
            (flatten-rec (first coll))
            (flatten-rec (next coll))))))
+
+(defn flatten-loop  [tree]
+  (loop  [[self & todo :as src] tree dst []]
+    (cond
+     (empty? src) dst                                ; усе
+     (not (coll? self)) (recur todo (conj dst self)) ; в  руках атом!
+     (empty? self) (recur todo dst)     ; в руках пустая
+                                        ; последовательность, дальше
+     :else (recur (list* (first self) (rest self) todo) dst))))
 
 ;; https://gist.github.com/1120880
 (defn flat-lazy-seq [[x & more :as coll]]
