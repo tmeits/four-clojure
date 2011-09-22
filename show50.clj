@@ -300,17 +300,21 @@
 
 ;; Функция сканирующая стоку и оставляющая только прописные символы
 ;; (большие буквы)
-(deftest only-capital [coll]
+(deftest only-capital 
   "Write a function which takes a string and returns a new string containing
    only the capital letters."
-  (= (capital-str "HeLlO, WoRlD!") "HLOWRD"))
+  (is (= (capital-str "HeLlO, WoRlD!") "HLOWRD"))
+  (is (= (capital-str-match "HeLlO, WoRlD!") "HLOWRD")))
 
 (defn capital-str [coll]
-  )    
-(fn [coll]
-  (apply str (filter #(Character/isUpperCase %) coll)))
-; note the use of apply here, as str takes a number of args instead
-; of a character collection
+  (reduce str (filter #(Character/isUpperCase %) coll)))    
+
+;; После функции filter мы получаем clojure.lang.LazySeq содержащий
+;; java.lang.Character. Применим свертку для преобразования k
+;; java.lang.String
+
+(defn capital-str-match [coll] "Use regex substination"
+  (.replaceAll coll "[^A-Z]"""))
 
 ; 30: Write a function which removes consecutive duplicates from a sequence.
 ;  (= (apply str (__ "Leeeeeerrroyyy")) "Leroy")
