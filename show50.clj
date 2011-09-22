@@ -1,4 +1,5 @@
 ;; Connected. Hack and be merry!
+;; http://lotrepls.appspot.com/
 (ns four.show50
   (:use clojure.test))
 
@@ -234,12 +235,28 @@
   (loop  [[self & todo :as src] tree dst []]
     (cond
      (empty? src) dst                                ; усе
-     (not (coll? self)) (recur todo (conj dst self)) ; в  руках атом!
+     (not (coll? self)) (recur todo (conj dst self)) ; в руках атом!
      (empty? self) (recur todo dst)     ; в руках пустая
                                         ; последовательность, дальше
      :else (recur (list* (first self) (rest self) todo) dst))))
 
+(defn flatten-loop-con  [tree]
+  (loop  [[self & todo :as src] tree dst []]
+    (cond
+     (empty? src) (do (println "empty-src") dst) ; 
+     (not (coll? self)) (do (println "not-coll-self") (recur todo (conj dst self))) ; атом!
+     (empty? self) (do (println "empty-empty") (recur todo dst))   ; 
+     :else (do (println "big-big") (recur (list* (first self) (rest self) todo) dst)))))
+
+;; https://docs.google.com/document/d/1TJQw_KhNl2NYf5JoGx1dv3V9Uk4vwsDqcL9LxL7WOZM/edit?hl=ru&pli=1
 ;; https://gist.github.com/1120880
+;; http://www.loufranco.com/blog/files/category-20-days-of-clojure.html
+
+;; One project I'd love to see users take on is providing a small example
+;; of the use of every library function (and its output). That would be a
+;; great complement to the documentation. 
+
+
 (defn flat-lazy-seq [[x & more :as coll]]
   (cond
     (empty? coll) []
@@ -247,11 +264,11 @@
     :else (lazy-seq (concat (vector x) (flat-lazy-seq more)))))
 
 ;; Using lazy-cat
-(fdefn flat-lazy-cat [[x & more :as coll]]
+(defn flat-lazy-cat [[x & more :as coll]]
   (cond
     (empty? coll) []
-    (coll? x) (lazy-cat (flat x) (flat more))
-    :else (lazy-cat (vector x) (flat more))))
+    (coll? x) (lazy-cat (flat-lazy-cat x) (flat-lazy-cat more))
+    :else (lazy-cat (vector x) (flat-lazy-cat more))))
 
 (defn skl2 [tree]
   (loop [[self & todo :as src] [tree] dst [()]]
@@ -261,16 +278,35 @@
      (empty? self) (recur todo (conj (first dst) (rest dst)))
      :else (recur (list* (first self) (rest self) todo) [dst]))))
 
+(defn nested-seq "Создадим вложенный список заданной глубины. функция нужна для
+тестирования flatten разных вариантов"
+  [n]
+  (lazy-seq (take n (iterate list (rand-int 100000)))))
+
+;; Result:
+;; four.show50>  (time (count (flatten (nested-seq 50000))))
+;; "Elapsed time: 2672722.607394 msecs"
+;; 50000
+;; four.show50>  (time (count (flatten-loop (nested-seq 50000))))
+;; "Elapsed time: 1818748.542657 msecs"
+;; 50000
+
+
 ;; http://habrahabr.ru/blogs/soft/105300/#habracut Про Org-Mode
 ;; http://www.softcraft.ru/paradigm/dp/dp05-06.shtml
 ;; http://e-maxx.ru/index.php
 ;; http://wikisec.ru/index.php?title=%D0%A2%D1%80%D0%B5%D0%B1%D0%BE%D0%B2%D0%B0%D0%BD%D0%B8%D1%8F_%D0%BA_5_%D0%BA%D0%BB%D0%B0%D1%81%D1%81%D1%83_%D0%B7%D0%B0%D1%89%D0%B8%D1%89%D0%B5%D0%BD%D0%BD%D0%BE%D1%81%D1%82%D0%B8_%D0%A1%D0%92%D0%A2
 ;; http://emeliyannikov.blogspot.com/2011/08/blog-post_22.html
 
-(run-tests)
-; 29: Write a function which takes a string and returns a new string containing
-;     only the capital letters.
-; (= (__ "HeLlO, WoRlD!") "HLOWRD")    
+;; Функция сканирующая стоку и оставляющая только прописные символы
+;; (большие буквы)
+(deftest only-capital [coll]
+  "Write a function which takes a string and returns a new string containing
+   only the capital letters."
+  (= (capital-str "HeLlO, WoRlD!") "HLOWRD"))
+
+(defn capital-str [coll]
+  )    
 (fn [coll]
   (apply str (filter #(Character/isUpperCase %) coll)))
 ; note the use of apply here, as str takes a number of args instead
@@ -375,3 +411,5 @@
 ; test cases).
 ; (= (set (__ [1 :a 2 :b 3 :c])) #{[1 2 3] [:a :b :c]})
 #(vals (group-by type %))
+
+(run-tests)
