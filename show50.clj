@@ -316,15 +316,20 @@
 (defn capital-str-match [coll] "Use regex substination"
   (.replaceAll coll "[^A-Z]"""))
 
-; 30: Write a function which removes consecutive duplicates from a sequence.
-;  (= (apply str (__ "Leeeeeerrroyyy")) "Leroy")
-(fn cmprs [coll]
+(deftest  test-remdump
+  (is (= (apply str (remdump "Leeeeeerrroyyy"))"Leroy") "30: Function which removes consecutive duplicates from a sequence.")
+  (is (= (remdump-part [1 1 2 3 3 2 2 3]) '(1 2 3 2 3)))
+  (is (= (remdump-part [[1 2] [1 2] [3 4] [1 2]]) '([1 2] [3 4] [1 2]))))
+
+(defn remdump [coll]
   (when-let [[f & r] (seq coll)] 
     (if (= f (first r)) 
-      (cmprs r) 
-      (cons f (cmprs r)))))  
-; Basically a variant of the filter function. Note the sequence is destructed
-; into first element f and the rest r.
+      (remdump r) 
+      (cons f (remdump r)))))  
+
+(defn remdump-part "Ужалить дубликаты из последовательности"
+  [coll]
+  (map first (partition-by identity coll)))
 
 ; 31: Write a function which packs consecutive duplicates into sub-lists.
 ; (= (__ [1 1 2 1 1 1 3 3]) '((1 1) (2) (1 1 1) (3 3)))
@@ -337,8 +342,7 @@
      (conj res prev))
     [] [(first coll)] (rest coll)))  
 ; res is the final list, prev keeps the immediate previous sub-list.
-; A much simpler version use partition-by:
-#(partition-by identity %)
+eshe; A much simpler version use partition-by:
 
 ; 33: Write a function which replicates each element of a sequence n number of
 ; times.
