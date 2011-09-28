@@ -321,15 +321,34 @@
   (is (= (remdump-part [1 1 2 3 3 2 2 3]) '(1 2 3 2 3)))
   (is (= (remdump-part [[1 2] [1 2] [3 4] [1 2]]) '([1 2] [3 4] [1 2]))))
 
+; Красивое решение
 (defn remdump [coll]
   (when-let [[f & r] (seq coll)] 
     (if (= f (first r)) 
       (remdump r) 
       (cons f (remdump r)))))  
+; Так себе функциональное решение без хвостовой рекурсии
+(defn rem-dup [coll]
+  (cond
+   (= 1 (count coll)) coll
+   (not (empty? coll))
+   (if (= (first coll) (first (next coll)))
+     (rem-dup (next coll))
+     (conj (rem-dup (next coll)) (first coll)))
+   :else '()
+   ))  
 
-(defn remdump-part "Ужалить дубликаты из последовательности"
+;; http://emacs-tips.blogspot.com/
+
+(defn remdump-part "Удалить дубликаты из последовательности"
   [coll]
   (map first (partition-by identity coll)))
+
+(defn remove-duplicates [list]
+  )
+
+;; http://lisperati.planvita.com/
+;; http://filonenko-mikhail.blogspot.com/2011/02/emacs.html
 
 ; 31: Write a function which packs consecutive duplicates into sub-lists.
 ; (= (__ [1 1 2 1 1 1 3 3]) '((1 1) (2) (1 1 1) (3 3)))
